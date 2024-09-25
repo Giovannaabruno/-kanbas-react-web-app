@@ -12,6 +12,13 @@ export default function Account() {
                         <AccountNavigation />
                     </td>
                     <td valign="top">
+                        <h1>Giovanna Bruno (section 1)</h1>
+                        <div>
+                            <a href="https://github.com/Giovannaabruno/-kanbas-react-web-app.git">1-Kanbas github repository</a>
+                        </div>
+                        <div>
+                            <a href="https://github.com/Giovannaabruno/PERSONAL-ACADEMIC-PROJECTS-COMPUTER-SCIENCE-PROJECTS.git">2-PERSONAL ACADEMIC PROJECTS COMPUTER SCIENCE PROJECTS github repository</a>
+                        </div>
                     <h2>Account</h2>
                         <Routes>
                             <Route path="/"
