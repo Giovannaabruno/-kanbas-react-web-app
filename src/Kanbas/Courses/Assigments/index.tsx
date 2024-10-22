@@ -6,8 +6,12 @@ import GreenCheckmark from "../Modules/GreenCheckmark";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { MdEditDocument } from 'react-icons/md';
 import { FaCaretDown } from 'react-icons/fa';
+import * as db from "../../Database"
+import { useParams, useSearchParams } from "react-router-dom";
 
 export default function Assignments() {
+    const {cid} = useParams();
+    const assigments = db.assignments;
     return (
         <div id="wd-assignments">
             <div className="wd-flex-row-container justify-content-between">
@@ -52,20 +56,24 @@ export default function Assignments() {
 
 
                     <ul id="wd-assignment-list" className="wd-lesson list-group rounded-0">
+                        
+                        {assigments
+                        .filter((assignment: any)=>assignment.course === cid)
+                        .map((assignment: any, indx) =>(
                         <li className="wd-assignment-list-item list-group-item p-3 ps-1">
 
 
                             <div className="d-flex justify-content-between align-items-center gap-4">
                                 <span><BsGripVertical className="me-2 fs-3" /> </span>
                                 <a className="wd-assignment-link"
-                                    href="#/Kanbas/Courses/1234/Assignments/123">
+                                    href={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}>
                                     <MdEditDocument style={{ color: 'green' }} />
                                 </a>
                                 <div style={{ display: "flex", flexDirection: "column" }}>
-                                    <h3><strong>A1</strong></h3>
+                                    <h3><strong>{"A" +(indx+ 1)}</strong></h3>
                                     <div className="d-flex">
                                         <span>
-                                            <span style={{ color: "red" }}>Multiple Modules</span> | <strong>Not available until</strong> May 6 at 12:00 am | <strong>Due</strong> May 13 at 11:59 pm | 100 pts </span>
+                                            <span style={{ color: "red" }}>Multiple Modules</span> | <strong>Not available until</strong> {assignment.available_date} | <strong>Due</strong> {assignment.due_date} | {assignment.points} pts </span>
 
 
                                     </div>
@@ -75,51 +83,8 @@ export default function Assignments() {
 
                             </div>
                         </li>
-                        <li className="wd-assignment-list-item list-group-item p-3 ps-1">
-
-                            <div className="d-flex justify-content-between align-items-center gap-4">
-                                <span><BsGripVertical className="me-2 fs-3" /> </span>
-                                <a className="wd-assignment-link"
-                                    href="#/Kanbas/Courses/1234/Assignments/123">
-                                    <MdEditDocument style={{ color: 'green' }} />
-                                </a>
-                                <div style={{ display: "flex", flexDirection: "column" }}>
-                                    <h3><strong>A2</strong></h3>
-                                    <div className="d-flex">
-                                        <span>
-                                            <span style={{ color: "red" }}>Multiple Modules</span> | <strong>Not available until</strong> May 13 at 12:00 am | <strong>Due</strong> May 20 at 11:59 pm | 100 pts </span>
-
-                                    </div>
-                                </div>
-                                <span><GreenCheckmark /></span>
-                                <span><IoEllipsisVertical className="fs-4" /></span>
-
-                            </div>
-                        </li>
-                        <li className="wd-assignment-list-item list-group-item p-3 ps-1 ">
-
-                            <div className="d-flex justify-content-between align-items-center gap-4">
-                                <span><BsGripVertical className="me-2 fs-3" /> </span>
-                                <a className="wd-assignment-link"
-                                    href="#/Kanbas/Courses/1234/Assignments/123">
-                                    <MdEditDocument style={{ color: 'green' }} />
-                                </a>
-                                <div style={{ display: "flex", flexDirection: "column" }}>
-                                    <h3><strong>A3</strong></h3>
-                                    <div className="d-flex">
-                                        <span>
-                                            <span style={{ color: "red" }}>Multiple Modules</span> | <strong>Not available until</strong> May 20 at 12:00 am |<strong>Due</strong> May 27 at 11:59 pm | 100 pts </span>
-
-
-                                    </div>
-                                </div>
-                                <span><GreenCheckmark /></span>
-                                <span><IoEllipsisVertical className="fs-4" /></span>
-
-                            </div>
-
-                        </li>
-
+                    ))}
+                 
                     </ul>
                 </li>
             </ul >

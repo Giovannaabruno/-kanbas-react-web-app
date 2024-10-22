@@ -1,6 +1,5 @@
 import { FaPlus } from "react-icons/fa6";
 import GreenCheckmark from "./GreenCheckmark";
-import { IoWarning } from "react-icons/io5";
 import { FaBan } from 'react-icons/fa';
 
 
@@ -26,9 +25,6 @@ export default function ModulesControls() {
               <GreenCheckmark />
               Publish modules only</a>
           </li>
-          {/* new adds:Create two more items with IDs wd-unpublish-all-modules-and-items and
-              wd-unpublish-modules-only with labels Unpublish all modules and items
-              and Unpublish modules only */}
           <li>  
           
             <a id="wd-unpublish-all-modules-and-items" className="dropdown-item" href="#">
@@ -42,7 +38,6 @@ export default function ModulesControls() {
           </li>
         </ul>
       </div>
-      {/* Impleme-progress and wd-collapse-all nt the View Progress and Collapse All buttons with IDs wd-view*/}
      
       <button id="wd-collapse-all" type="button" className="btn btn-lg btn-secondary me-1 float-end">
        

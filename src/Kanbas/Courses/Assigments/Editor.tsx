@@ -1,14 +1,18 @@
 import { BiCalendar } from "react-icons/bi";
 import BootstrapForms from "../../../Labs/Lab2/BootstrapForms";
-
+import * as db from "../../Database"
+import { useParams } from "react-router";
 export default function AssignmentEditor() {
+    const { cid, aid } = useParams();
+    const assignmentObj = db.assignments.find(assignment => assignment._id === aid);
+
     return (
         <div id="assignment">
-            <h4><label htmlFor="wd-name">Assignment Name</label></h4>
+            <h4><label htmlFor="wd-name">{assignmentObj && assignmentObj.title}</label></h4>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }} id="wd-assignments-editor  d-flex flex-column align-items-end">
                 <input type="assignment" className="mb-4 form-control"
-                    id="wd-name" placeholder="A1" />
-                
+                    id="wd-name" placeholder={assignmentObj?._id.substring(0, 2)} />
+
                 <div className="mb-4 border border-secondary rounded p-3" id="wd-description"  >
                     The assignment is <span style={{ color: "red" }}>Multiple Modules</span>
                     <ul></ul>
@@ -28,24 +32,24 @@ export default function AssignmentEditor() {
                 </div>
 
                 <table >
-                    
+
                     <tr className="mb-4" >
                         <td align="right" valign="top">
 
                             <label htmlFor="wd-points">Points</label>
                         </td>
                         <td>
-                            <input   type="points" className="mb-4 w-100 form-control"
-                                id="wd-points" placeholder="A1" />
+                            <input type="points" className="mb-4 w-100 form-control"
+                                id="wd-points" placeholder={assignmentObj?.points} />
 
                         </td>
 
 
                     </tr>
-                    
+
                     <tr>
                         <td align="right" valign="top">
-                            <label htmlFor="wd-assignment-group">Assignment Group</label> 
+                            <label htmlFor="wd-assignment-group">Assignment Group</label>
                         </td>
 
                         <td>
@@ -59,11 +63,11 @@ export default function AssignmentEditor() {
                         </td>
                     </tr>
 
-                    
+
 
                     <tr>
                         <td align="right" valign="top">
-                            <label htmlFor="wd-css-styling-display-grade-as">Display Grade as</label> 
+                            <label htmlFor="wd-css-styling-display-grade-as">Display Grade as</label>
                         </td>
                         <td>
                             <select id="wd-css-styling-display-grade-as" className="w-100 mb-4 form-select">
@@ -83,12 +87,12 @@ export default function AssignmentEditor() {
 
                         </td>
                     </tr>
-                    
+
 
 
                     <tr>
                         <td align="right" valign="top">
-                            <label htmlFor="wd-css-styling-submission-type">Submission Type</label> 
+                            <label htmlFor="wd-css-styling-submission-type">Submission Type</label>
                         </td>
 
                         <td>
@@ -103,9 +107,9 @@ export default function AssignmentEditor() {
                                 <td></td>
 
                                 <td>
-                                    
+
                                     <label className="mb-4" id="wd-css-styling-checkboxes"><strong>Online Entry Options</strong></label>
-                                    
+
 
                                     <div className="mb-3 form-check" >
                                         <label htmlFor="wd-text-entry">Text Entry</label>
@@ -122,18 +126,18 @@ export default function AssignmentEditor() {
                                     <div className="mb-3 form-check" >
                                         <label htmlFor="wd-chkbox-Media-Recordings">Media Recordings</label>
                                         <input type="checkbox" className="form-check-input" name="check-genre" id="wd-chkbox-Media-Recordings" />
-                                        </div>
+                                    </div>
 
                                     <div className="mb-3 form-check" >
-                                    <label htmlFor="wd-chkbox-Student-Annotation">Student Annotation</label>
-                                        <input type="checkbox"className="form-check-input" name="check-genre" id="wd-chkbox-Student-Annotation" />
-                                       
-                                        </div>
-                                        <div className="mb-3 form-check" >
+                                        <label htmlFor="wd-chkbox-Student-Annotation">Student Annotation</label>
+                                        <input type="checkbox" className="form-check-input" name="check-genre" id="wd-chkbox-Student-Annotation" />
+
+                                    </div>
+                                    <div className="mb-3 form-check" >
                                         <label htmlFor="wd-chkbox-File-Update">File Update</label>
                                         <input type="checkbox" className="form-check-input" name="check-genre" id="wd-chkbox-File-Update" />
-                                     
-                                        </div>
+
+                                    </div>
                                 </td>
                             </div>
                         </td>
@@ -151,12 +155,12 @@ export default function AssignmentEditor() {
                                 <tr>
 
                                     <td colSpan={2}>
-                                        <label className="input-group"><strong>Assign to  </strong> 
+                                        <label className="input-group"><strong>Assign to  </strong>
 
 
                                             <input type="text" className="mb-4 w-100 form-control"
                                                 id="wd-assign-to" defaultValue="Everyone" />
-                                            
+
                                         </label>
                                     </td>
                                 </tr>
@@ -170,7 +174,7 @@ export default function AssignmentEditor() {
                                         <label className="mb-4 input-group" htmlFor="wd-css-styling-due-date">
                                             <input type="" className="form-control"
                                                 id="wd-due-date"
-                                                value="May 13,2024,11:59 PM" />
+                                                value={assignmentObj?.due_date} />
 
                                             <span className="input-group-text">
                                                 <BiCalendar />
@@ -178,21 +182,21 @@ export default function AssignmentEditor() {
                                         </label>
                                     </td>
                                 </tr>
-                            
+
                                 <tr>
                                     <td>
                                         <strong>Available from</strong> <br />
                                         <label htmlFor="wd-available-from" className="input-group" >
-                                            <input type="" className=" form-control" id="wd-css-styling-available-from" value="2 May 6, 2024, 12:00 PM" />
+                                            <input type="" className=" form-control" id="wd-css-styling-available-from" value={assignmentObj && assignmentObj.available_date} />
                                             <span className="input-group-text">
                                                 <BiCalendar />
                                             </span>
                                         </label>
                                     </td>
                                     <td>
-                                        <strong>Available from</strong> <br />
+                                        <strong>Until</strong> <br />
                                         <label htmlFor="wd-available-from" className="input-group" >
-                                            <input type="" className=" form-control" id="wd-css-styling-available-from" value="" />
+                                            <input type="" className=" form-control" id="wd-css-styling-available-from" value='' />
                                             <span className="input-group-text">
                                                 <BiCalendar />
                                             </span>
@@ -213,8 +217,8 @@ export default function AssignmentEditor() {
 
                     <tr><td colSpan={2}><hr /></td></tr>
 
-                    <tr><td></td><td align="right"><button className="btn btn-md btn-secondary me-2">
-                        Cancel</button> <button className="btn btn-danger ">Save</button></td>
+                    <tr><td></td><td align="right"><a href={`#/Kanbas/Courses/${cid}/Assignments`} ><button className="btn btn-md btn-secondary me-2">
+                        Cancel</button></a> <a href={`#/Kanbas/Courses/${cid}/Assignments`} ><button className="btn btn-danger ">Save</button></a></td>
                     </tr>
 
 
