@@ -7,11 +7,33 @@ import { IoEllipsisVertical } from "react-icons/io5";
 import { MdEditDocument } from 'react-icons/md';
 import { FaCaretDown } from 'react-icons/fa';
 import * as db from "../../Database"
-import { useParams, useSearchParams } from "react-router-dom";
+import { FaTrash } from "react-icons/fa";
+import { deleteAssignment, editAssignment } from "./reducer";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import AssigmentPopUp from "./AssigmentPopUp";
+import { useState } from "react";
+
 
 export default function Assignments() {
+    const [assignmentName, setAssignmentName] = useState("");
+    const [assignmentId, setAssignmentId] = useState("");
+
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
     const {cid} = useParams();
-    const assigments = db.assignments;
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const {assignments} = useSelector((state: any) => state.assignmentsReducer);
+    const editCurrentAssignment= (aid:any)=>{
+        dispatch(editAssignment(aid));
+        navigate( `/Kanbas/Courses/${cid}/Assignments/${aid}`);
+
+    }
+    const deleteCurrentAssignment = ()=>{
+        dispatch(deleteAssignment(assignmentId));
+        setAssignmentId("");
+        setAssignmentName("");
+    }
     return (
         <div id="wd-assignments">
             <div className="wd-flex-row-container justify-content-between">
@@ -26,17 +48,17 @@ export default function Assignments() {
                         className="form-control"
                     />
                 </div>
-
-                <div>
+                {currentUser.role === 'FACULTY' &&
+                (<div>
                     <button id="wd-add-assignment-group"
                         className="btn btn-md btn-secondary me-2"><FaPlus /> Group
 
                     </button>
 
-                    <button id="wd--css-style-add-assignment"
-                        className="btn btn-md btn-danger"><FaPlus /> Assignment</button>
+                   <a className="wd-assignment-link" href={`#/Kanbas/Courses/${cid}/Assignments/1234`} ><button id="wd--css-style-add-assignment"
+                        className="btn btn-md btn-danger"><FaPlus /> Assignment</button></a>
 
-                </div>
+                </div>)}
             </div>
 
             <ul className="list-group rounded-0">
@@ -50,25 +72,27 @@ export default function Assignments() {
 
                             <BsGripVertical className="me-2 fs-3" /> <FaCaretDown />ASSIGNMENTS
                         </h3>
-                        <span > <small className="border rounded-pill  border-dark  p-2">40% of Total</small> <FaPlus /> <IoEllipsisVertical className="fs-4" /></span>
+                       <span > {currentUser.role === 'FACULTY' &&(   <> <small className="border rounded-pill  border-dark  p-2">40% of Total</small> <FaPlus /></>)} <IoEllipsisVertical className="fs-4" /></span>
 
                     </div>
 
 
                     <ul id="wd-assignment-list" className="wd-lesson list-group rounded-0">
                         
-                        {assigments
+                        {assignments
                         .filter((assignment: any)=>assignment.course === cid)
-                        .map((assignment: any, indx) =>(
+                        .map((assignment: any, indx:number) =>(
                         <li className="wd-assignment-list-item list-group-item p-3 ps-1">
 
 
                             <div className="d-flex justify-content-between align-items-center gap-4">
                                 <span><BsGripVertical className="me-2 fs-3" /> </span>
-                                <a className="wd-assignment-link"
-                                    href={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}>
+                                {currentUser.role === 'FACULTY' &&( <span
+                                onClick={()=>editCurrentAssignment(assignment._id)}
+                                 className="wd-assignment-link"
+                                   >
                                     <MdEditDocument style={{ color: 'green' }} />
-                                </a>
+                                </span>)}
                                 <div style={{ display: "flex", flexDirection: "column" }}>
                                     <h3><strong>{"A" +(indx+ 1)}</strong></h3>
                                     <div className="d-flex">
@@ -78,16 +102,31 @@ export default function Assignments() {
 
                                     </div>
                                 </div>
+                             {currentUser.role === 'FACULTY' &&(<span 
+                                                id="wd-add-assignment-btn"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#wd-add-assignment-dialog"
+                                                onClick={()=>{
+                                                    setAssignmentName(assignment.title);
+                                                    setAssignmentId(assignment._id);
+                                                }}
+                                                
+                                                > <FaTrash className="text-danger me-2 mb-1"  /></span>)}
                                 <span><GreenCheckmark /></span>
                                 <span><IoEllipsisVertical className="fs-4" /></span>
 
                             </div>
                         </li>
                     ))}
+
                  
                     </ul>
                 </li>
             </ul >
+            <AssigmentPopUp dialogTitle="Delete Assignment" 
+                            assigmentName={assignmentName}
+                            deleteAssignment={deleteCurrentAssignment}
+                            />
         </div >
     );
 }

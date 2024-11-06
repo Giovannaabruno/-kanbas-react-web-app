@@ -1,19 +1,61 @@
 import { BiCalendar } from "react-icons/bi";
 import BootstrapForms from "../../../Labs/Lab2/BootstrapForms";
 import * as db from "../../Database"
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import { useState } from "react";
+import { addAssignment, editAssignment , updateAssignment} from "./reducer";
+import { title } from "process";
+import { useDispatch, useSelector } from "react-redux";
 export default function AssignmentEditor() {
+    
     const { cid, aid } = useParams();
-    const assignmentObj = db.assignments.find(assignment => assignment._id === aid);
+    const {assignments} = useSelector((state: any) => state.assignmentsReducer);
+    
+    const assignmentObj = assignments.find((assignment: any) => assignment._id === aid);
+    const [assignment, setAssignment] = useState<any>(assignmentObj);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+  
+    const addNewAssignment = () => {
+
+        console.log(assignment);
+        dispatch(addAssignment(assignment));
+        setAssignment({});
+        navigate(`/Kanbas/Courses/${cid}/Assignments`);
+    }
+    const editCurrentAssignment = () => {
+      dispatch(updateAssignment({...assignment, editing: false}))
+
+        navigate(`/Kanbas/Courses/${cid}/Assignments`);
+        
+    }
+   
+
 
     return (
         <div id="assignment">
             <h4><label htmlFor="wd-name">{assignmentObj && assignmentObj.title}</label></h4>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }} id="wd-assignments-editor  d-flex flex-column align-items-end">
-                <input type="assignment" className="mb-4 form-control"
-                    id="wd-name" placeholder={assignmentObj?._id.substring(0, 2)} />
 
-                <div className="mb-4 border border-secondary rounded p-3" id="wd-description"  >
+                {/* {assignmentObj ? (
+                    <input type="assignment" className="mb-4 form-control"
+                        id="wd-name" placeholder={assignmentObj?._id.substring(0, 2)} />) : ( */}
+                <label className="w-100">
+                    Assignment Name
+                    <input
+                        value={assignment?.title}
+                        type="assignment"
+                        className="mb-4 form-control"
+                        id="wd-name"
+                        placeholder="New Assignment"
+                       
+                        onChange={(e) => setAssignment({ ...assignment, title: e.target.value })}
+                    />
+                </label>
+                {/* )} */}
+
+
+                {/* {assignmentObj ? (<div className="mb-4 border border-secondary rounded p-3" id="wd-description"  >
                     The assignment is <span style={{ color: "red" }}>Multiple Modules</span>
                     <ul></ul>
                     Submit a link to the landing page of your Web application running on Netlify.
@@ -29,7 +71,9 @@ export default function AssignmentEditor() {
                         <li> Links to all relevant source code repositories </li>
                     </ul>
                     The Kanbas application should include a link to navigate back to the landing page.
-                </div>
+                </div>) : ( */}
+                <textarea value={assignment?.description} onChange={(e) => setAssignment({ ...assignment, description: e.target.value })} className="mb-4 form-control"></textarea>
+                {/* )} */}
 
                 <table >
 
@@ -39,33 +83,34 @@ export default function AssignmentEditor() {
                             <label htmlFor="wd-points">Points</label>
                         </td>
                         <td>
-                            <input type="points" className="mb-4 w-100 form-control"
-                                id="wd-points" placeholder={assignmentObj?.points} />
+                            <input onChange={(e) => setAssignment({ ...assignment, course: cid, points: e.target.value })} type="points" className="mb-4 w-100 form-control"
+                                id="wd-points" value={assignment?.points} />
 
                         </td>
 
 
                     </tr>
 
-                    <tr>
-                        <td align="right" valign="top">
-                            <label htmlFor="wd-assignment-group">Assignment Group</label>
-                        </td>
+                    {/* {assignmentObj && (
+                        <tr>
+                            <td align="right" valign="top">
+                                <label htmlFor="wd-assignment-group">Assignment Group</label>
+                            </td>
 
-                        <td>
-                            <select id="wd-css-styling-assignment-group" className="w-100 mb-4 form-select">
-                                <option value="ASSIGNMENTS" selected>ASSIGNMENTS</option>
-                                <option value="GROUP 1" >GROUP 1</option>
-                                <option value="GROUP 2"> GROUP 2</option>
-                                <option value="GROUP 3"> GROUP 3</option>
-                            </select>
+                            <td>
+                                <select id="wd-css-styling-assignment-group" className="w-100 mb-4 form-select">
+                                    <option value="ASSIGNMENTS" selected>ASSIGNMENTS</option>
+                                    <option value="GROUP 1" >GROUP 1</option>
+                                    <option value="GROUP 2"> GROUP 2</option>
+                                    <option value="GROUP 3"> GROUP 3</option>
+                                </select>
 
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
+                    )}
 
 
-
-                    <tr>
+                    {assignmentObj && (<tr>
                         <td align="right" valign="top">
                             <label htmlFor="wd-css-styling-display-grade-as">Display Grade as</label>
                         </td>
@@ -86,11 +131,11 @@ export default function AssignmentEditor() {
                             </select>
 
                         </td>
-                    </tr>
+                    </tr>)}
 
 
 
-                    <tr>
+                    {assignmentObj && (<tr>
                         <td align="right" valign="top">
                             <label htmlFor="wd-css-styling-submission-type">Submission Type</label>
                         </td>
@@ -142,6 +187,9 @@ export default function AssignmentEditor() {
                             </div>
                         </td>
                     </tr>
+                    )} */}
+
+
                     <br />
 
                     <tr>
@@ -159,7 +207,9 @@ export default function AssignmentEditor() {
 
 
                                             <input type="text" className="mb-4 w-100 form-control"
-                                                id="wd-assign-to" defaultValue="Everyone" />
+                                                id="wd-assign-to" defaultValue="Everyone"
+                                                
+                                                 />
 
                                         </label>
                                     </td>
@@ -172,9 +222,9 @@ export default function AssignmentEditor() {
                                     <td colSpan={2}>
                                         <strong>Due</strong>
                                         <label className="mb-4 input-group" htmlFor="wd-css-styling-due-date">
-                                            <input type="" className="form-control"
+                                            <input onChange={(e) => setAssignment({ ...assignment, due_date: e.target.value })} type="" className="form-control"
                                                 id="wd-due-date"
-                                                value={assignmentObj?.due_date} />
+                                                value={assignment?.due_date} />
 
                                             <span className="input-group-text">
                                                 <BiCalendar />
@@ -187,7 +237,8 @@ export default function AssignmentEditor() {
                                     <td>
                                         <strong>Available from</strong> <br />
                                         <label htmlFor="wd-available-from" className="input-group" >
-                                            <input type="" className=" form-control" id="wd-css-styling-available-from" value={assignmentObj && assignmentObj.available_date} />
+                                            <input    value={assignment?.available_date}
+                                            onChange={(e) => setAssignment({ ...assignment, available_date: e.target.value })} type="" className=" form-control" id="wd-css-styling-available-from"  />
                                             <span className="input-group-text">
                                                 <BiCalendar />
                                             </span>
@@ -218,7 +269,8 @@ export default function AssignmentEditor() {
                     <tr><td colSpan={2}><hr /></td></tr>
 
                     <tr><td></td><td align="right"><a href={`#/Kanbas/Courses/${cid}/Assignments`} ><button className="btn btn-md btn-secondary me-2">
-                        Cancel</button></a> <a href={`#/Kanbas/Courses/${cid}/Assignments`} ><button className="btn btn-danger ">Save</button></a></td>
+                        Cancel</button></a>
+                        <button onClick={assignment?.editing?()=> editCurrentAssignment() : addNewAssignment} className="btn btn-danger ">Save</button></td>
                     </tr>
 
 
