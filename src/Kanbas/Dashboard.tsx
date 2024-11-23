@@ -1,10 +1,10 @@
 
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom";
-import * as db from "./Database";
 import { useDispatch, useSelector } from "react-redux";
-import {enroll, unenroll} from "./Courses/reducer";
-
+import { enroll, setEnrollments, unenroll } from "./Courses/reducer";
+import * as coursesClient from "../Kanbas/Courses/client";
+import * as enrollmentsClient from "./Courses/clientEnrollments";
 
 export default function Dashboard(
     { courses, course, setCourse, addNewCourse,
@@ -17,11 +17,19 @@ export default function Dashboard(
 
         }) {
     const { currentUser } = useSelector((state: any) => state.accountReducer);
-    const { enrollments } = useSelector((state: any)=>state.enrollmentsReducer);
+    const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
 
     const [isEnroll, setIsEnroll] = useState(true);
-    const dispatch =useDispatch();
+    const dispatch = useDispatch();
 
+
+    const fetchEnrollments = async () => {
+        const enrollments = await coursesClient.fetchAllEnrollments();
+        dispatch(setEnrollments(enrollments));
+    };
+    useEffect(() => {
+        fetchEnrollments();
+    }, []);
 
     return (
         <div id="wd-dashboard">
@@ -105,9 +113,9 @@ export default function Dashboard(
                                                             enrollment.user === currentUser?._id &&
                                                             enrollment.course === course._id
                                                     ) ? (<button id="wd-edit-course-click"
-                                                        onClick={(event) => {
+                                                        onClick={async (event) => {
                                                             event.preventDefault();
-
+                                                            await enrollmentsClient.unenroll(course?._id, currentUser?._id)
 
                                                             dispatch(unenroll([course?._id, currentUser?._id]));
                                                         }}
@@ -116,9 +124,10 @@ export default function Dashboard(
                                                     </button>
                                                     ) : (<button
 
-                                                        onClick={(event) => {
-                                                           const  enrollment = {course: course?._id, user: currentUser?._id};
+                                                        onClick={async (event) => {
+                                                            const enrollment = { course: course?._id, user: currentUser?._id };
                                                             event.preventDefault();
+                                                            await enrollmentsClient.enroll(enrollment)
                                                             dispatch(enroll(enrollment));
                                                         }}
 

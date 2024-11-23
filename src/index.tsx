@@ -7,6 +7,8 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./index.css";
 
 
+
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

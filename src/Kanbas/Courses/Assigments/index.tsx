@@ -7,12 +7,14 @@ import { IoEllipsisVertical } from "react-icons/io5";
 import { MdEditDocument } from 'react-icons/md';
 import { FaCaretDown } from 'react-icons/fa';
 import * as db from "../../Database"
+import * as assignmentsClient from "./client";
+import * as coursesClient from "../client";
 import { FaTrash } from "react-icons/fa";
-import { deleteAssignment, editAssignment } from "./reducer";
+import { deleteAssignment, editAssignment, setAssignments } from "./reducer";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import AssigmentPopUp from "./AssigmentPopUp";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 export default function Assignments() {
@@ -29,11 +31,19 @@ export default function Assignments() {
         navigate( `/Kanbas/Courses/${cid}/Assignments/${aid}`);
 
     }
-    const deleteCurrentAssignment = ()=>{
+    const deleteCurrentAssignment = async ()=>{
+        await assignmentsClient.deleteAssignment(assignmentId);
         dispatch(deleteAssignment(assignmentId));
         setAssignmentId("");
         setAssignmentName("");
     }
+    const fetchAssignments = async() =>{
+        const assignments = await coursesClient.findAssignmentsForCourse(cid as string);
+        dispatch(setAssignments(assignments));
+    };
+    useEffect(()=>{
+        fetchAssignments();
+    }, []);
     return (
         <div id="wd-assignments">
             <div className="wd-flex-row-container justify-content-between">

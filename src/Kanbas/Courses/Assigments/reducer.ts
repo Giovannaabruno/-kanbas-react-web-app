@@ -1,14 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { assignments } from "../../Database";
+
 import { title } from "process";
 import { MdDescription } from "react-icons/md";
 const initialState = {
-    assignments: assignments,
+  assignments: [],
 };
 const assignmentSlice = createSlice({
   name: "assignments",
   initialState,
   reducers: {
+    setAssignments: (state, action) => {
+      state.assignments = action.payload;
+
+    },
     addAssignment: (state, { payload: assignment }) => {
       const newAssignment: any = {
         _id: new Date().getTime().toString(),
@@ -37,6 +41,6 @@ const assignmentSlice = createSlice({
     },
   },
 });
-export const { addAssignment, deleteAssignment, updateAssignment, editAssignment } =
-assignmentSlice.actions;
+export const { addAssignment, setAssignments,  deleteAssignment, updateAssignment, editAssignment } =
+  assignmentSlice.actions;
 export default assignmentSlice.reducer;

@@ -3,11 +3,10 @@ import BootstrapForms from "../../../Labs/Lab2/BootstrapForms";
 import * as db from "../../Database"
 import { useNavigate, useParams } from "react-router";
 import { useState } from "react";
-import { addAssignment, editAssignment , updateAssignment} from "./reducer";
+// import { addAssignment, editAssignment , updateAssignment} from "./reducer";
 import { title } from "process";
-import * as assignmentsClient from "./client";
 import { useDispatch, useSelector } from "react-redux";
-export default function AssignmentEditor() {
+export default function QuizDetailEditor() {
     
     const { cid, aid } = useParams();
     const {assignments} = useSelector((state: any) => state.assignmentsReducer);
@@ -17,21 +16,19 @@ export default function AssignmentEditor() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
   
-    const addNewAssignment = async () => {
+    // const addNewAssignment = () => {
 
-        await assignmentsClient.createAssignment(assignment);
-      
-        dispatch(addAssignment(assignment));
-        setAssignment({});
-        navigate(`/Kanbas/Courses/${cid}/Assignments`);
-    }
-    const editCurrentAssignment = async () => {
-        await assignmentsClient.updateAssignment(assignment);
-      dispatch(updateAssignment({...assignment, editing: false}))
+    //     console.log(assignment);
+    //     dispatch(addAssignment(assignment));
+    //     setAssignment({});
+    //     navigate(`/Kanbas/Courses/${cid}/Assignments`);
+    // }
+    // const editCurrentAssignment = () => {
+    //   dispatch(updateAssignment({...assignment, editing: false}))
 
-        navigate(`/Kanbas/Courses/${cid}/Assignments`);
+    //     navigate(`/Kanbas/Courses/${cid}/Assignments`);
         
-    }
+    // }
    
 
 
@@ -94,7 +91,7 @@ export default function AssignmentEditor() {
 
                     </tr>
 
-                    {/* {assignmentObj && (
+                    {assignmentObj && (
                         <tr>
                             <td align="right" valign="top">
                                 <label htmlFor="wd-assignment-group">Assignment Group</label>
@@ -190,7 +187,7 @@ export default function AssignmentEditor() {
                             </div>
                         </td>
                     </tr>
-                    )} */}
+                    )} 
 
 
                     <br />
@@ -269,12 +266,18 @@ export default function AssignmentEditor() {
 
                     </tr>
 
-                    <tr><td colSpan={2}><hr /></td></tr>
+                    <tr><td></td><td align="center"><hr /><hr /></td></tr>
 
-                    <tr><td></td><td align="right"><a href={`#/Kanbas/Courses/${cid}/Assignments`} ><button className="btn btn-md btn-secondary me-2">
+                    <tr><td></td><td align="center"><a href={`#/Kanbas/Courses/${cid}/Assignments`} ><button className="btn btn-md btn-secondary me-2">
                         Cancel</button></a>
-                        <button onClick={assignment?.editing?()=> editCurrentAssignment() : addNewAssignment} className="btn btn-danger ">Save</button></td>
+                        <button
+                        //  onClick={assignment?.editing?()=> editCurrentAssignment() : addNewAssignment} 
+                        className="btn btn-danger "
+                         >Save
+                         </button>
+                         </td>
                     </tr>
+                    <tr><td ><hr /></td><td ><hr /></td></tr>
 
 
 
