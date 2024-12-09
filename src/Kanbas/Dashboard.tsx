@@ -7,13 +7,15 @@ import * as coursesClient from "../Kanbas/Courses/client";
 import * as enrollmentsClient from "./Courses/clientEnrollments";
 
 export default function Dashboard(
-    { courses, course, setCourse, addNewCourse,
-        deleteCourse, updateCourse, isEnrollment, setIsEnrollment }: {
+    { courses, course, setCourse, updateEnrollment, addNewCourse,
+        deleteCourse, updateCourse, enrolling, setEnrolling }: {
             courses: any[]; course: any; setCourse: (course: any) => void;
+            updateEnrollment: (courseId: string, enrolled: boolean) => void;
             addNewCourse: () => void; deleteCourse: (course: any) => void;
             updateCourse: () => void;
-            isEnrollment: boolean;
-            setIsEnrollment: (isEnrollment: boolean) => void;
+            enrolling: boolean; setEnrolling: (enrolling: boolean) => void;
+
+
 
         }) {
     const { currentUser } = useSelector((state: any) => state.accountReducer);
@@ -34,6 +36,12 @@ export default function Dashboard(
     return (
         <div id="wd-dashboard">
             <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
+
+
+            <button onClick={() => setEnrolling(!enrolling)} className="float-end btn btn-primary" >
+                {enrolling ? "My Courses" : "All Courses"}
+            </button>
+
             {currentUser.role === 'FACULTY' &&
                 (<div>
                     <h5>New Course
@@ -56,11 +64,11 @@ export default function Dashboard(
                 </div>)}
             <hr />
 
-            {currentUser.role === 'STUDENT' &&
+            {/* {currentUser.role === 'STUDENT' &&
                 (<button className="btn btn-primary float-end me-2"
                     onClick={() => setIsEnrollment(!isEnrollment)} id="wd-update-course-click">
                     Enrollments
-                </button>)}
+                </button>)} */}
 
             <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />
             <div id="wd-dashboard-courses" className="row">
@@ -76,6 +84,17 @@ export default function Dashboard(
                                         <img src="/images/1718387290197.jpeg" width="100%" height={160} />
                                         <div className="card-body">
                                             <h5 className="wd-dashboard-course-title card-title">
+                                          
+                                                {enrolling && (
+                                                    <button onClick={(event) => {
+                                                        event.preventDefault();
+                                                        updateEnrollment(course._id, !course.enrolled);
+                                                    }}
+                                                        className={`btn ${course.enrolled ? "btn-danger" : "btn-success"} float-end`} >
+                                                        {course.enrolled ? "Unenroll" : "Enroll"}
+                                                    </button>
+                                                )}
+
                                                 {course.name}
                                             </h5>
                                             <p className="wd-dashboard-course-title card-text overflow-y-hidden" style={{ maxHeight: 100 }}>
@@ -105,7 +124,7 @@ export default function Dashboard(
                                                     </button>
                                                 </>)
                                             }
-
+{/* 
                                             {(currentUser.role === 'STUDENT') &&
                                                 (<>
                                                     {enrollments.some(
@@ -137,7 +156,7 @@ export default function Dashboard(
                                                     </button>
                                                     )}
                                                 </>)
-                                            }
+                                            } */}
 
                                         </div><br></br>
                                     </Link>

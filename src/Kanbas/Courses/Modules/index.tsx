@@ -44,7 +44,8 @@ export default function Modules() {
     
     return (
         <div>
-          <ModulesControls setModuleName={setModuleName} moduleName={moduleName} addModule={createModuleForCourse} />
+         { currentUser.role === 'FACULTY' && <ModulesControls setModuleName={setModuleName} moduleName={moduleName} 
+         addModule={createModuleForCourse} />}
 
 
             <br />

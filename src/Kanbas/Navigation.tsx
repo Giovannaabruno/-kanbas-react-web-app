@@ -1,6 +1,7 @@
 import { AiOutlineDashboard, AiOutlineCalendar, AiOutlineInbox, AiFillCheckCircle, AiFillTool, AiOutlineSetting } from "react-icons/ai";
 import { LiaBookSolid, LiaCogSolid } from "react-icons/lia";
 import { FaInbox, FaRegCircleUser } from "react-icons/fa6";
+import { Fa42Group, FaQuestion } from "react-icons/fa6";
 import { Link, useLocation } from "react-router-dom";
 import { IoCalendarOutline } from "react-icons/io5";
 export default function KanbasNavigation() {
@@ -11,6 +12,7 @@ export default function KanbasNavigation() {
         { label: "Calendar", path: "/Kanbas/Calendar", icon: IoCalendarOutline },
         { label: "Inbox", path: "/Kanbas/Inbox", icon: FaInbox },
         { label: "Labs", path: "/Labs", icon: LiaCogSolid },
+      
     ];
 
     return (
