@@ -8,7 +8,7 @@ import TrueFalse from "./TrueFalseQuiz";
 export default function Quizzes() {
         const [title, setTitle] = useState<string>('Is 2 + 2 = 4?');
         const [points, setPoints] = useState<number>(3);
-        const [text , setText] = useState<string>("");
+        const [text, setText] = useState<string>("");
         const [question, setQuestion] = useState<string>('Is it true that 2 + 2 = 4?');
         const [content, setContent] = useState<string>("Is it true that 2 + 2 = 4?")
         const [answer, setAnswer] = useState<"True" | "False" | null>('True');
@@ -29,35 +29,37 @@ export default function Quizzes() {
                 { text: "7", isCorrect: false },
         ]
 
-        )
+        );
         const [component, setComponent] = useState("mtchoice");
         useEffect(() => {
                 if (component === "mtchoice") {
                         setContent("How much is 2 + 2?")
                         setTitle("Easy Question");
                         setText(" Enter your question and multiple answers, then select the one correct answer.");
-                        
+
                 }
                 else {
                         setTitle("is 2 + 2 = 4?")
                         setContent("is it true that 2 + 2 = 4?");
                         setText(" Enter your question text, then select if True or False is the correct answer.");
-                        
+
 
                 }
-        }, [component])
+        }, [component]);
         const addChoice = () => {
                 setChoices([...choices, { text: "", isCorrect: false }]);
-        }
+        };
         const updateChoice = (index: number, text: string, isCorrect: boolean) => {
                 const updatedChoices = choices.map((choice, i) =>
-                        i == index ? { ...choice, text, isCorrect } : { ...choice, text, isCorrect: isCorrect ? false : choice.isCorrect }
+                        i === index
+                                ? { text, isCorrect }
+                                : { ...choice, isCorrect: isCorrect ? false : choice.isCorrect }
                 );
                 setChoices(updatedChoices);
-        }
+        };
         const removeChoice = (index: number) => {
                 setChoices(choices.filter((_, i) => i !== index));
-        }
+        };
 
 
         return <div className="container my-4 p-4 border rounded shadow-sm">
@@ -83,27 +85,27 @@ export default function Quizzes() {
                 </div>
 
                 <p>
-                       {text}
+                        {text}
                 </p>
 
                 <label className="form-label fw-bold">Question:</label>
                 <WordEditor content={content} setContent={setContent} />
                 <div className="mb-3">
                         <label className="form-label fw-bold">Answers:</label>
-                        {component === "mtchoice" ?
+                        {component === "mtchoice" ?(
                                 <MultipleChoiceQuestionEditor
                                         choices={choices}
                                         updateChoice={updateChoice}
-                                        removeChoice={removeChoice} /> : <TrueFalse />
+                                        removeChoice={removeChoice} /> ): (<TrueFalse />)
                         }
                 </div>
-                <div className="d-flex justify-content-end">
+                {component === "mtchoice" && <div className="d-flex justify-content-end">
                         <button className="btn btn-link text-danger position-relatve"
                                 style={{ right: 0 }}
                                 onClick={addChoice}>
                                 + Add Another Answer
                         </button>
-                </div>
+                </div>}
                 <div className="d-flex justify-content-start">
                         <button className="btn btn-secondary me-2"
 
